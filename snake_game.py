@@ -1,36 +1,41 @@
 import curses
 import random
-import time
+# import time
 
+# funksioni kryesor i lojes 
 def main(stdscr):
     # Initialize colors
-    curses.start_color()
+    curses.start_color() # Aktivizon modalitetin e ngjyrave.
+     #curses.init_pair(index, fg, bg) percakton ngjyrat — jeshile me background te zi (snake), e kuqe (ushqimi), e verdhe (piket) 
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Snake
-    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)    # Food
-    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # Score
+    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)    # Ushqimi
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # Piket
 
-    # Get screen dimensions
-    height, width = stdscr.getmaxyx()
+    height, width = stdscr.getmaxyx() # Marrim dimensionet e terminalit
 
-    # Define window size and position
-    win_height = min(30, height - 2)
+    # Përcaktojme madhësinë dhe pozicionin e dritares
+    win_height = min(30, height - 2) # Siguron që dritarja e lojës të përshtatet brenda terminalit.
     win_width = min(100, width - 2)
-    start_y = (height - win_height) // 2
+    start_y = (height - win_height) // 2 # Llogarit këndet per tu shfaqur loja ne qender.
     start_x = (width - win_width) // 2
 
-    # Create game window
-    win = curses.newwin(win_height, win_width, start_y, start_x)
-    win.keypad(True)      # Enable arrow keys
-    win.timeout(150)      # Refresh rate in ms
-    win.nodelay(True)     # Non-blocking input
+    win = curses.newwin(win_height, win_width, start_y, start_x) # krijojme nje dritare per lojen qe te sfaqet
+    win.keypad(True) # Aktivizon tastierën e paisjes per pergjigjie.
+    win.timeout(120) # vendos shpejtesine e lojes
+
+    # win.border(0) # krijon kufirin e dritares
+    # win.addstr(0, 2, "SNAKE GAME", curses.A_BOLD) # Shtojme titullin e lojes
+    # win.addstr(0, win_width - 12, "Score: 0", curses.A_BOLD) # Shtojme titullin e lojes
 
     # Hide cursor
     curses.curs_set(0)
 
+    # hapim variabla per secilin objekt per ti dhene vleren e ngjyrave qe kemi percaktuar me lart 
     snake_color = curses.color_pair(1)
     food_color = curses.color_pair(2)
     score_color = curses.color_pair(3)
 
+    # funksioni per inicializimin e lojes psh(si do te levizi snake, ku do te dali ushqimi, etj) 
     def initialize_game():
         snake_x = win_width // 4
         snake_y = win_height // 2
@@ -44,6 +49,7 @@ def main(stdscr):
         score = 0
         return snake, food, key, score
 
+    # funksioni per vendosjen e ushqimit ne pozicione te rastit 
     def place_food(snake):
         while True:
             food = [
@@ -53,6 +59,7 @@ def main(stdscr):
             if food not in snake:
                 return food
 
+    # funksioni per te nxjerr tabelen e lojes game over si dhe te jep mundesine ta rinisesh lojen ose ta dalesh nga loja
     def display_game_over(score):
         win.clear()
         game_over_text = "GAME OVER"
@@ -74,12 +81,14 @@ def main(stdscr):
             elif key in [ord('q'), ord('Q')]:
                 return False
 
+    # funksioni per te treguar si do te funksionoi loja
     def run_game():
         snake, food, key, score = initialize_game()
-        while True:
-            win.border(0)
-            score_text = f" Score: {score} "
+        while True: # while loop 
+            win.border(0) # percakton borderin e dritares se lojes
+            score_text = f" Score: {score} || " # piket e lojes
             win.addstr(0, win_width - len(score_text) - 1, score_text, score_color)
+             # win.addstr(0, 2, "SNAKE GAME", curses.A_BOLD) # Shtojme titullin e lojes
 
             next_key = win.getch()
             if next_key == -1:
@@ -143,7 +152,7 @@ def main(stdscr):
                     win.addch(segment[0], segment[1], 'O', snake_color)
 
             win.refresh()
-
+    # i jep mundesein perdoruesit te rinis lojen
     while True:
         if not run_game():
             break
