@@ -9,7 +9,8 @@ def main(stdscr):
      #curses.init_pair(index, fg, bg) percakton ngjyrat — jeshile me background te zi (snake), e kuqe (ushqimi), e verdhe (piket) 
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Snake
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)    # Ushqimi
-    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # Piket
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # Piket
+    curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK) # ngjyra e titullit te lojes
 
     height, width = stdscr.getmaxyx() # Marrim dimensionet e terminalit
 
@@ -23,8 +24,7 @@ def main(stdscr):
     win.keypad(True) # Aktivizon tastierën e paisjes per pergjigjie.
     win.timeout(120) # vendos shpejtesine e lojes
 
-    # win.border(0) # krijon kufirin e dritares
-    # win.addstr(0, 2, "SNAKE GAME", curses.A_BOLD) # Shtojme titullin e lojes
+    win.addstr(0, 2, "SNAKE GAME", curses.A_BOLD) # Shtojme titullin e lojes
     # win.addstr(0, win_width - 12, "Score: 0", curses.A_BOLD) # Shtojme titullin e lojes
 
     # Hide cursor
@@ -34,16 +34,23 @@ def main(stdscr):
     snake_color = curses.color_pair(1)
     food_color = curses.color_pair(2)
     score_color = curses.color_pair(3)
+    title_color = curses.color_pair(4)
 
     # funksioni per inicializimin e lojes psh(si do te levizi snake, ku do te dali ushqimi, etj) 
     def initialize_game():
-        snake_x = win_width // 4
+        snake_x = win_width // 4 # Pjestoni win_width me 4 = (të plotë) dhe ruajm ne variabel atë rezultat në snake_x
         snake_y = win_height // 2
         snake = [
             [snake_y, snake_x],
             [snake_y, snake_x - 1],
-            [snake_y, snake_x - 2]
-        ]
+            [snake_y, snake_x - 2],
+            # [snake_y, snake_x - 3],
+            # [snake_y, snake_x - 4],
+            # [snake_y, snake_x - 5],
+            # [snake_y, snake_x - 6],
+            # [snake_y, snake_x - 7],
+            # [snake_y, snake_x - 8],
+        ] # Kjo krijon trupin fillestar të snake si një listë koordinatash
         food = place_food(snake)
         key = curses.KEY_RIGHT
         score = 0
@@ -65,6 +72,7 @@ def main(stdscr):
         game_over_text = "GAME OVER"
         score_text = f"Final Score: {score}"
         restart_text = "Press 'R' to Restart or 'Q' to Quit"
+        game_creators_text = "This Game is Created by Skendri Peza & Eriglen Mata. Falemniderit!"
 
         win.addstr(win_height // 2 - 2, (win_width - len(game_over_text)) // 2, 
                    game_over_text, curses.A_BOLD)
@@ -72,6 +80,7 @@ def main(stdscr):
                    score_text, score_color)
         win.addstr(win_height // 2 + 2, (win_width - len(restart_text)) // 2, 
                    restart_text)
+        win.addstr(win_height // 5, (win_width - len(game_creators_text)) // 2, game_creators_text, curses.A_BOLD)
         win.refresh()
 
         while True:
@@ -88,7 +97,7 @@ def main(stdscr):
             win.border(0) # percakton borderin e dritares se lojes
             score_text = f" Score: {score} || " # piket e lojes
             win.addstr(0, win_width - len(score_text) - 1, score_text, score_color)
-             # win.addstr(0, 2, "SNAKE GAME", curses.A_BOLD) # Shtojme titullin e lojes
+            win.addstr(0, 40, "SNAKE GAME", title_color) # Shtojme ngjyren e titullit
 
             next_key = win.getch()
             if next_key == -1:
